@@ -27,17 +27,11 @@ jobs:
       - run:
           name: "Build docker image and push to dkcoer hub"
           command: |
-            if [ "${CIECLE_BRANCH}" == "master" ]; then
               docker build -t phlawath/day2:latest .
               docker build -t phlawath/day2:${CIRCLE_SHA1} .
               docker push phlawath/day2:latest
               docker push phlawath/day2:${CIRCLE_SHA1}
-            elif [ "${CIECLE_BRANCH}" == "staging" ]; then
-              docker build -t phlawath/day2_staging:${CIRCLE_SHA1} .
-              docker push phlawath/day2_staging:latest
-            else
-              echo "This is ${CIECLE_BRANCH}"
-            fi
+
       - run:
           name: "Call to rancher to deploy"
           command: |

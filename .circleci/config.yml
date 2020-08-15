@@ -17,9 +17,19 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
       - run: npm install
-      - run: npm run test
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
+      - run: npm test
+      - setup_remote_docker
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKERPASSWORD
+      - run:
+          name: "Build docker image and push to dkcoer hub"
+          command: |
+              cp Dockerfile.production Dockerfile
+              docker build -t phlawath/day2:latest .
+              docker build -t phlawath/day2:${CIRCLE_SHA1} .
+              docker push phlawath/day2:latest
+              docker push phlawath/day2:${CIRCLE_SHA1}
       - run: echo Done

@@ -38,4 +38,16 @@ jobs:
             else
               echo "This is ${CIECLE_BRANCH}"
             fi
+      - run:
+          name: "Call to rancher to deploy"
+          command: |
+              docker run --rm -it \
+                -e CATTLE_ACCESS_KEY="$CATTLE_ACCESS_KEY" \
+                -e CATTLE_SECRET_KEY="$CATTLE_SECRET_KEY" \
+                -e CATTLE_URL="$CATTLE_URL" \
+                etlweather/guacho upgrade $RANCHER_EXAMPLE_NODEJS \
+                --imageUuid 'docker:phlawath/day2_2:latest' \
+                --batch_size 3 --start_first \
+                --auto_complete --timeout 600 \
+                \
       - run: echo Done

@@ -4,9 +4,9 @@ RUN mkdir -p /app
 
 COPY . /app
 
-RUN npm install
-
 WORKDIR /app
+
+RUN npm install
 
 CMD ["node","bin/www"]
 

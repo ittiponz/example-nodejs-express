@@ -22,6 +22,11 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm test
+  setup:
+    docker:
+      - image: circleci/node:8.11.1-stretch
+    working_directory: ~/repo
+    steps:
       - setup_remote_docker
       - run: docker login -u $DOCKER_USERNAME -p $DOCKERPASSWORD
       - run:
@@ -31,7 +36,11 @@ jobs:
               docker build -t phlawath/day2:${CIRCLE_SHA1} .
               docker push phlawath/day2:latest
               docker push phlawath/day2:${CIRCLE_SHA1}
-
+  deploy:
+    docker:
+      - image: circleci/node:8.11.1-stretch
+    working_directory: ~/repo
+    steps:
       - run:
           name: "Call to rancher to deploy"
           command: |
@@ -45,3 +54,15 @@ jobs:
                 --auto_complete --timeout 600 \
                 \
       - run: echo Done
+workflows:
+  version: 2
+  build_setup_deploy:
+    jobs:
+      - build
+      - setup:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - build
+            - setup

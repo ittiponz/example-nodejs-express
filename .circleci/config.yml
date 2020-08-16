@@ -16,6 +16,7 @@ jobs:
             - v1-dependencies-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
+      - run: npm install elastic-apm-node@~1.14 --save
       - run: npm install
       - save_cache:
           paths:
@@ -34,6 +35,7 @@ jobs:
             - v1-dependencies-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
+      - run: npm install elastic-apm-node@~1.14 --save
       - run: npm install
       - save_cache:
           paths:
@@ -63,7 +65,7 @@ jobs:
                 etlweather/gaucho upgrade $RANCHER_EXAMPLE_NODEJS \
                 --imageUuid 'docker:phlawath/day2:latest' \
                 --batch_size 3 --start_first \
-                --auto_complete --timeout 600 \
+                --auto_complete --timeout 600 --auto_complete \
                 \
       - run: echo Done
 workflows:

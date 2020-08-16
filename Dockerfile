@@ -6,6 +6,8 @@ COPY . /app
 
 WORKDIR /app
 
+RUN npm install elastic-apm-node --save
+
 RUN npm install
 
 CMD ["node","bin/www"]
